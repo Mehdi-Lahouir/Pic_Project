@@ -1,0 +1,11 @@
+CREATE TABLE IF NOT EXISTS event (
+    id BIGSERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS import_batch (
+    id BIGSERIAL PRIMARY KEY,
+    source_filename VARCHAR(255),
+    imported_at TIMESTAMP NOT NULL DEFAULT NOW()
+);
