@@ -56,8 +56,9 @@ export class EventDetailComponent implements OnInit, OnDestroy {
       .get<Punch[]>(`/api/events/${id}/punches?afterId=0`)
       .subscribe({
         next: (data) => {
-          this.punches.set(data);
-          this.afterId = data.reduce((max, p) => Math.max(max, p.id), 0);
+          const normalized = data.map(p => this.addTimeText(p));
+          this.punches.set(normalized);
+          this.afterId = normalized.reduce((max, p) => Math.max(max, p.id), 0);
           this.loading.set(false);
         },
         error: (err) => {
@@ -82,7 +83,7 @@ export class EventDetailComponent implements OnInit, OnDestroy {
 
     es.addEventListener('punch', (event: MessageEvent) => {
       try {
-        const data = JSON.parse(event.data) as Punch;
+        const data = this.addTimeText(JSON.parse(event.data) as Punch);
         this.afterId = Math.max(this.afterId, Number(data.id));
         this.punches.update(list => {
           const exists = list.some(p => p.id === data.id);
@@ -104,5 +105,19 @@ export class EventDetailComponent implements OnInit, OnDestroy {
       this.stream.close();
       this.stream = undefined;
     }
+  }
+
+  private addTimeText(p: Punch): Punch {
+    if (p.timeText) return p;
+    const ms = Number(p.time);
+    if (Number.isFinite(ms)) {
+      const date = new Date(ms);
+      const hh = String(date.getUTCHours()).padStart(2, '0');
+      const mm = String(date.getUTCMinutes()).padStart(2, '0');
+      const ss = String(date.getUTCSeconds()).padStart(2, '0');
+      const msPart = String(date.getUTCMilliseconds()).padStart(3, '0');
+      return { ...p, timeText: `${hh}:${mm}:${ss}.${msPart}` };
+    }
+    return p;
   }
 }
