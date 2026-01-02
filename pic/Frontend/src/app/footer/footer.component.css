@@ -1,0 +1,41 @@
+.app-footer {
+  border-top: 1px solid #e5e7eb;
+  padding: 0.85rem 1.25rem;
+  background: #f8fafc;
+  color: #0f172a;
+}
+
+.footer-body {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.muted {
+  color: #64748b;
+  font-weight: 600;
+}
+
+.right {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.pill {
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 0.85rem;
+  background: linear-gradient(120deg, #38bdf8, #a855f7);
+  color: #0b1224;
+  box-shadow: 0 4px 12px rgba(56, 189, 248, 0.3);
+}
+
+.pill.subtle {
+  background: #e2e8f0;
+  color: #0f172a;
+  box-shadow: none;
+}

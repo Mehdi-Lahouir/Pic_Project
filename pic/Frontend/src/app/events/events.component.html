@@ -1,0 +1,59 @@
+<section class="events-shell">
+  <header class="page-head">
+    <div>
+      <p class="eyebrow">Live data</p>
+      <h1>Events</h1>
+      <p class="lede">Fetched from your PIC backend and SportIdent API.</p>
+    </div>
+    <button class="ghost" (click)="loadEvents()" [disabled]="loading()">
+      {{ loading() ? 'Loading…' : 'Refresh' }}
+    </button>
+  </header>
+
+  @if (error()) {
+    <div class="callout error">
+      <strong>Error:</strong> {{ error() }}
+    </div>
+  }
+
+  @if (loading()) {
+    <div class="grid">
+      @for (n of [1,2,3,4]; track n) {
+        <div class="card skeleton">
+          <div class="line wide"></div>
+          <div class="line"></div>
+          <div class="line short"></div>
+        </div>
+      }
+    </div>
+  } @else if (events().length) {
+    <div class="grid">
+      @for (event of events(); track event.id ?? event.name) {
+        <a class="card link" [routerLink]="['/events', event.id ?? event.name]">
+          <p class="eyebrow">#{{ event.id ?? '—' }}</p>
+          <h3>{{ event.name }}</h3>
+          <p class="muted">
+            <span *ngIf="event.when">When: {{ event.when }}</span>
+            <span *ngIf="!event.when">No start time provided</span>
+          </p>
+          <p class="muted">
+            <span *ngIf="event.location">Where: {{ event.location }}</span>
+            <span *ngIf="!event.location">No location provided</span>
+          </p>
+          <span class="cta">View punches →</span>
+        </a>
+      }
+    </div>
+  } @else {
+    <div class="callout">
+      No events to show yet. Verify your token and that SportIdent returns data.
+    </div>
+  }
+
+  @if (rawResponse()) {
+    <details class="raw">
+      <summary>Raw response</summary>
+      <pre>{{ rawResponse() }}</pre>
+    </details>
+  }
+</section>

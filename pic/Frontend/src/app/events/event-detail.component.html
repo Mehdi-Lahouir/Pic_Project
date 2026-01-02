@@ -1,0 +1,54 @@
+<section class="detail-shell">
+  <header class="page-head">
+    <div>
+      <p class="eyebrow">Event</p>
+      <div class="title-row">
+        <h1>Event #{{ eventId() }}</h1>
+        <span class="live-pill">Live</span>
+      </div>
+      <p class="lede">Recent punches (afterId=0, streamed)</p>
+    </div>
+    <div class="actions">
+      <a routerLink="/events" class="ghost">← Back</a>
+      <button class="ghost" (click)="loadPunches(eventId())" [disabled]="loading()">
+        {{ loading() ? 'Loading…' : 'Refresh' }}
+      </button>
+    </div>
+  </header>
+
+  @if (error()) {
+    <div class="callout error">
+      <strong>Error:</strong> {{ error() }}
+    </div>
+  }
+
+  @if (loading()) {
+    <div class="list">
+      @for (n of [1,2,3,4,5]; track n) {
+        <div class="row skeleton">
+          <div class="line wide"></div>
+          <div class="line"></div>
+        </div>
+      }
+    </div>
+  } @else if (punches().length) {
+    <div class="list">
+      @for (punch of punches(); track punch.id) {
+        <div class="row">
+          <div class="id">#{{ punch.id }}</div>
+          <div>
+            <div class="main">Card {{ punch.card }} · Code {{ punch.code }}</div>
+            <div class="meta">
+              <span>Modem: {{ punch.modem || '—' }}</span>
+              <span>Time: {{ punch.timeText || punch.time }}</span>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  } @else {
+    <div class="callout">
+      No punches yet for this event.
+    </div>
+  }
+</section>
